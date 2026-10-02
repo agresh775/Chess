@@ -1,29 +1,29 @@
-[![CI](https://github.com/agresh775/Chess/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/agresh775/Chess/actions/workflows/ci.yml)
+[!\[CI](https://github.com/agresh775/Chess/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/agresh775/Chess/actions/workflows/ci.yml)
 
 # Шахматное приложение
-Приложение состоит из двух частей - графического интерфейса (GUI) и шахматного движка. Графический интерфейс реализован на языке Python с помощью библиотеки Pygame. 
+Приложение состоит из двух частей - графического интерфейса (GUI) и шахматного движка. Графический интерфейс реализован на языке Python с помощью библиотеки Pygame.
 Движок реализован на языке C++. Общение GUI и движка реализовано посредством универсального шахматного протокола (UCI).
 
 ## Использование
 
-### 1. Клонирование репозитория
+### 1\. Клонирование репозитория
 
 ```bash
 git clone https://github.com/agresh775/Chess.git
 cd Chess
 ```
 
-### 2. Установка зависимостей
+### 2\. Установка зависимостей
 
 #### Linux
 
 ```bash
-sudo apt update && sudo apt install -y \
-    python3-pip python3-venv \
-    cmake ninja-build g++ \
+sudo apt update \&\& sudo apt install -y \\
+    python3-pip python3-venv \\
+    cmake ninja-build g++ \\
     clang-format clang-tidy
 
-python3 -m venv .venv && source .venv/bin/activate
+python3 -m venv .venv \&\& source .venv/bin/activate
 pip install pygame ruff
 ```
 
@@ -38,7 +38,7 @@ pip install clang-tools
 clang-tools --install 23 --tool clang-format clang-tidy
 ```
 
-### 3. Сборка
+### 3\. Сборка
 
 #### Linux
 
@@ -50,7 +50,7 @@ python3 build.py
 #### Windows
 
 ```powershell
-cd engine\src
+cd engine\\src
 python build.py
 ```
 
@@ -69,6 +69,12 @@ python3 main.py
 cd gui\src
 python main.py
 ```
+
+### 5. Результат
+
+!\[Игровое поле](gui/assets/screenshots/board.png)
+
+!\[Настройки](gui/assets/screenshots/settings.png)
 
 ## Документация
 
