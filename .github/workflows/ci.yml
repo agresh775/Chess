@@ -12,8 +12,10 @@ jobs:
       - uses: actions/checkout@v4
       - run: sudo apt-get update && sudo apt-get install -y clang-tidy
       - name: Build
+        working-directory: ${{ github.workspace }}
         run: python engine/src/build.py
       - name: Test
+        working-directory: ${{ github.workspace }}
         run: python engine/test/test.py
         timeout-minutes: 1
   gui-static-analysis:
@@ -24,7 +26,7 @@ jobs:
         with:
           python-version: '3.13'
       - run: pip install ruff
-      - run: python gui_static_analysis.py     
+      - run: python gui/src/gui_static_analysis.py     
 
       
     
