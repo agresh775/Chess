@@ -1,8 +1,10 @@
-def convert(x_step, y_step, mode):
-    if mode == "white":
-        alpha = chr(x_step + ord('a'))
-        digit = 8 - y_step
-    if mode == "black":
-        alpha = chr(7 - x_step + ord('a'))
-        digit = y_step + 1
+def convert(x, y):
+    alpha = chr(x - 1 + ord("a"))
+    digit = y
     return alpha + str(digit)
+
+
+def parse_move(move):
+    start = [int(move[1]), ord(move[0]) - ord("a") + 1]
+    end = [int(move[3]), ord(move[2]) - ord("a") + 1]
+    return [start, end]
