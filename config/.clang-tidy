@@ -1,0 +1,3 @@
+Checks: 'bugprone-*,-bugprone-branch-clone,-bugprone-exception-escape'
+
+WarningsAsErrors: 'bugprone-*'
