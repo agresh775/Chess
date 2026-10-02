@@ -1,0 +1,33 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  engine_test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: sudo apt-get update && sudo apt-get install -y clang-tidy
+      - name: Build
+        run: python build.py
+        working-directory: engine/src
+      - name: Test
+        run: python test.py
+        working-directory: engine/test
+        timeout-minutes: 1
+  gui-static-analysis:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - run: pip install ruff
+      - run: python gui_static_analysis.py 
+        working-directory: gui/src    
+
+      
+    
