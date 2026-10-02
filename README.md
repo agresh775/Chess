@@ -1,7 +1,6 @@
 [!\[CI](https://github.com/agresh775/Chess/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/agresh775/Chess/actions/workflows/ci.yml)
 
 # Шахматное приложение
-
 Приложение состоит из двух частей - графического интерфейса (GUI) и шахматного движка. Графический интерфейс реализован на языке Python с помощью библиотеки Pygame.
 Движок реализован на языке C++. Общение GUI и движка реализовано посредством универсального шахматного протокола (UCI).
 
@@ -55,7 +54,7 @@ cd engine\\src
 python build.py
 ```
 
-### 4\. Запуск
+### 4. Запуск
 
 #### Linux
 
@@ -67,7 +66,7 @@ python3 main.py
 #### Windows
 
 ```powershell
-cd gui\\src
+cd gui\src
 python main.py
 ```
 
