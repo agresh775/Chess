@@ -1,5 +1,4 @@
 import copy
-
 import pygame
 import pygame.gfxdraw
 

@@ -1,5 +1,4 @@
 import subprocess
-
 import pygame
 
 pygame.init()
