@@ -743,7 +743,11 @@ class Board:
                     ):
                         return False
                     piece = self.find_piece([1, 8], player)
-                    if piece.piece_type == "rook" and piece.move_cnt == 0:
+                    if (
+                        piece != None
+                        and piece.piece_type == "rook"
+                        and piece.move_cnt == 0
+                    ):
                         return True
                 elif side == "queenside":
                     if (
@@ -758,7 +762,11 @@ class Board:
                     ):
                         return False
                     piece = self.find_piece([1, 1], player)
-                    if piece.piece_type == "rook" and piece.move_cnt == 0:
+                    if (
+                        piece != None
+                        and piece.piece_type == "rook"
+                        and piece.move_cnt == 0
+                    ):
                         return True
             elif king.color == "black":
                 if (
@@ -778,7 +786,11 @@ class Board:
                     ):
                         return False
                     piece = self.find_piece([8, 8], player)
-                    if piece.piece_type == "rook" and piece.move_cnt == 0:
+                    if (
+                        piece != None
+                        and piece.piece_type == "rook"
+                        and piece.move_cnt == 0
+                    ):
                         return True
                 elif side == "queenside":
                     if (
@@ -793,7 +805,11 @@ class Board:
                     ):
                         return False
                     piece = self.find_piece([8, 1], player)
-                    if piece.piece_type == "rook" and piece.move_cnt == 0:
+                    if (
+                        piece != None
+                        and piece.piece_type == "rook"
+                        and piece.move_cnt == 0
+                    ):
                         return True
             return False
 
