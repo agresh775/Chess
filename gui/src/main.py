@@ -19,6 +19,7 @@ def get(answer):
     return line == answer
 
 
+# Настраивается игровое окно, инициализируются игровое поле и настройки, запускается движок.
 info = pygame.display.Info()
 screen_width = info.current_w
 screen_height = info.current_h

@@ -7,6 +7,7 @@ Piece::Piece(Type t, Color c, std::pair<int, int> sq, std::vector<std::vector<st
     type = t;
     color = c;
     square = sq;
+    // Набор независимых списков последовательных операций, заданных парами (delta_y, delta_x).
     operations = ops;
     is_captured = false;
     move_cnt = 0;
@@ -14,6 +15,7 @@ Piece::Piece(Type t, Color c, std::pair<int, int> sq, std::vector<std::vector<st
 
 void Piece::captured() { is_captured = true; }
 
+// Шахматные поля задаются парами (y, x), y - вертикальная состовляющая, x - горизонтальная составляющая.
 const std::vector<std::vector<std::pair<int, int>>>& rook_operations() {
     static const std::vector<std::vector<std::pair<int, int>>> data = {
         {{1, 0}, {2, 0}, {3, 0}, {4, 0}, {5, 0}, {6, 0}, {7, 0}},

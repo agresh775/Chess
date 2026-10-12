@@ -7,6 +7,10 @@ from converter import convert, parse_move
 
 class Position:
     def __init__(self, board):
+        """
+        Логическая доска задаётся парами (y, x) и соответсвует отображаемой доске при игре за белых.
+        y растёт снизу вверх, x растёт слева направо.
+        """
         self.board = board
         self.move_count = 0
         self.fifty_move_count = 0
@@ -307,6 +311,7 @@ class Position:
         return self.moves
 
     def append_position(self):
+        # Копируется текущее состояние партии и добавляется в стек состояний.
         human_pieces_copy = pygame.sprite.Group()
         engine_pieces_copy = pygame.sprite.Group()
         for piece in self.board.human:
@@ -325,6 +330,7 @@ class Position:
         )
 
     def pop_position(self):
+        # Текущее состояние партии принимает значение последнего сохраненного состояния.
         self.positions.pop()
         human_pieces_copy = pygame.sprite.Group()
         engine_pieces_copy = pygame.sprite.Group()
@@ -341,6 +347,7 @@ class Position:
         self.moves.pop()
 
     def move(self, move, player):
+        # Делается ход с изменением текущего состояния партии.
         if player == "human":
             opponent = "engine"
             player_pieces = self.board.human
@@ -618,6 +625,7 @@ class Position:
             set1.add(piece.piece_type)
         for piece in self.board.engine:
             set2.add(piece.piece_type)
+        # Проверяется недостаток материала.
         return (
             set1 == {"king"}
             and set2 == {"king"}
@@ -652,6 +660,7 @@ class Position:
         return False
 
     def controlled_squares(self, piece, player):
+        # Возвращается список всех полей, доступных для взятия выбранной фигурой.
         if player == "human":
             opponent = "engine"
         else:
@@ -680,6 +689,7 @@ class Position:
                 return piece
 
     def castling(self, king, side, player):
+        # Проверяется возможность рокировки.
         if player == "human":
             opponent = "engine"
         else:
@@ -757,6 +767,7 @@ class Position:
         return False
 
     def en_passant(self, player):
+        # Возвращается список всех ходов с взятием на проходе.
         if player == "human":
             opponent = "engine"
             player_pieces = self.board.human
@@ -797,6 +808,7 @@ class Position:
         return squares
 
     def available_squares(self, piece, player):
+        # Возвращается список всех допустимых ходов для выбранной фигуры без учёта дальнейшего шаха.
         if player == "human":
             opponent = "engine"
         else:
