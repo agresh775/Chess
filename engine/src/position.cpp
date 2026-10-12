@@ -10,6 +10,7 @@
 #include "converter.hpp"
 
 void Position::Move(std::pair<int, int> start, std::pair<int, int> end) {
+    // Делается ход с изменением текущего состояния партии.
     Piece::Color player = this->player, opponent = ColorTransition(this->player);
     Piece& piece = Pieces(player)[FindPiece(start, player)];
     if (piece.type == Piece::Type::Pawn) {
@@ -58,6 +59,7 @@ std::vector<Piece>& Position::Pieces(Piece::Color player) {
 }
 
 bool Position::Check(Piece::Color player) {
+    // Выполняется проверка шаха.
     Piece::Color opponent = ColorTransition(player);
     for (auto piece : Pieces(player)) {
         if (piece.is_captured) {
@@ -71,6 +73,7 @@ bool Position::Check(Piece::Color player) {
 }
 
 bool Position::Checkmate(Piece::Color player) {
+    // Выполняется проверка мата.
     Piece::Color opponent = ColorTransition(player);
     for (auto piece : Pieces(player)) {
         if (piece.is_captured) {
@@ -115,6 +118,7 @@ bool Position::IsOccupied(std::pair<int, int> square, Piece::Color player) {
 }
 
 std::vector<std::pair<int, int>> Position::ControlledSquares(Piece& piece) {
+    // Возвращается список всех полей, доступных для взятия выбранной фигурой.
     Piece::Color player = piece.color, opponent = ColorTransition(piece.color);
     std::vector<std::pair<int, int>> squares;
     for (auto ops : piece.operations) {
@@ -146,6 +150,7 @@ int Position::FindPiece(std::pair<int, int> square, Piece::Color player) {
 }
 
 bool Position::Castling(Piece& king, std::string side) {
+    // Проверяется возможность рокировки.
     Piece::Color player = king.color, opponent = ColorTransition(king.color);
     if (king.color == Piece::Color::White) {
         if (king.square != std::pair{1, 5} || IsControlled({1, 5}, opponent) || king.move_cnt > 0) {
@@ -234,6 +239,7 @@ bool Position::Castling(Piece& king, std::string side) {
 }
 
 std::vector<std::pair<int, int>> Position::EnPassant(Piece::Color player) {
+    // Возвращается список всех ходов с взятием на проходе.
     Piece::Color opponent = ColorTransition(player);
     std::vector<std::pair<int, int>> squares;
     for (auto piece : Pieces(player)) {
@@ -275,6 +281,7 @@ std::vector<std::pair<int, int>> Position::EnPassant(Piece::Color player) {
 }
 
 std::vector<std::pair<int, int>> Position::AvailableSquares(Piece& piece) {
+    // Возвращается список всех допустимых ходов для выбранной фигуры без учёта дальнейшего шаха.
     Piece::Color player = piece.color, opponent = ColorTransition(piece.color);
     std::vector<std::pair<int, int>> squares;
     if (piece.type == Piece::Type::King) {
@@ -335,6 +342,7 @@ std::vector<std::pair<int, int>> Position::AvailableSquares(Piece& piece) {
 }
 
 int Position::PositionEvaluation() {
+    // Оценивается позиция по наличию мата и сумме весов всех фигур на доске.
     if (Checkmate(Piece::Color::White)) {
         return -100;
     } else if (Checkmate(Piece::Color::Black)) {
@@ -377,6 +385,7 @@ int Position::PositionEvaluation() {
 }
 
 void Position::StartPosition(std::string fen) {
+    // Сбрасываются все накопленные состояния, загружается новое состояние из строки в формате FEN.
     this->white_pieces.clear();
     this->black_pieces.clear();
     this->moves.clear();
@@ -472,6 +481,7 @@ void Position::StartPosition(std::string fen) {
 }
 
 void Position::Move(std::string move) {
+    // Делается ход и фиксируется текущее состояние партии.
     auto parsed_move = ParseMove(move);
     auto start = parsed_move.first, end = parsed_move.second;
     Move(start, end);
@@ -495,6 +505,7 @@ std::pair<long long, std::pair<int, std::string>> Position::Go(std::mt19937& gen
             Move(piece.square, square);
             this->moves.push_back(move);
             this->positions.push_back({this->white_pieces, this->black_pieces});
+            // Проверяется наличие шаха после хода.
             if (Check(this->player) == false) {
                 this->player = ColorTransition(this->player);
                 auto res = Go(gen, depth - 1);
@@ -502,6 +513,7 @@ std::pair<long long, std::pair<int, std::string>> Position::Go(std::mt19937& gen
                 int eval = res.second.first;
                 this->player = ColorTransition(this->player);
                 if (moves.size() > 0) {
+                    // Выбирается ход с большей оценкой для белых и с меньшей оценкой для чёрных.
                     if ((this->player == Piece::Color::White && eval > moves[0].first) ||
                         (this->player == Piece::Color::Black && eval < moves[0].first)) {
                         moves.clear();
@@ -520,5 +532,6 @@ std::pair<long long, std::pair<int, std::string>> Position::Go(std::mt19937& gen
         }
     }
     std::uniform_int_distribution<int> dist(0, static_cast<int>(moves.size()) - 1);
+    // Возвращается количество возможных вариантов партии на глубине depth и произвольный лучший ход на глубине depth.
     return {node_count, moves[dist(gen)]};
 }

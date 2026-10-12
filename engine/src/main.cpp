@@ -6,10 +6,12 @@
 #include "position.hpp"
 
 int main() {
+    // Инициализируется генератор случайных чисел для получения произвольного лучшего хода.
     std::random_device rd;
     std::mt19937 gen(rd());
     std::string line, token;
     Position position;
+    // Начальная позиция в формате FEN
     std::string startpos = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
     position.StartPosition(startpos);
     while (std::getline(std::cin, line)) {
@@ -44,8 +46,10 @@ int main() {
             int depth;
             iss >> token >> depth;
             if (token == "perft") {
+                // Выводится количество возможных вариантов партии на глубине depth.
                 std::cout << "nodes " << position.Go(gen, depth).first << std::endl;
             } else {
+                // Выводится произвольный лучший ход на глубине depth.
                 std::cout << "bestmove " << position.Go(gen, depth).second.second << std::endl;
             }
         } else if (token == "quit") {

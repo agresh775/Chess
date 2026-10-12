@@ -38,6 +38,7 @@ class Board:
             self.rect = self.image.get_rect()
 
         def __copy__(self):
+            # Атрибут square полностью копируется, все остальные - по ссылке.
             new = Board.Piece.__new__(Board.Piece)
             new.__dict__.update(self.__dict__)
             new.__dict__["square"] = copy.copy(self.square)
@@ -51,6 +52,13 @@ class Board:
         center_x, center_y = screen_width // 2, screen_height // 2
         self.screen_width = screen_width
         self.screen_height = screen_height
+        """
+        Двумерный массив, содержащий тройки (<цвет>, <прямоугольник>, <флаг выделения>).
+        Флаг выделения равен 0 - выделения нет.
+        Флаг выделения равен 1 - выбрана фигура.
+        Флаг выделения равен 2 - есть возможность для хода без взятия.
+        Флаг выделения равен 3 - есть возможность для хода с взятием.
+        """
         self.board = [[None] * 9 for i in range(9)]
         self.mode = mode
         self.human = pygame.sprite.Group()
@@ -70,6 +78,7 @@ class Board:
                 rect = pygame.Rect(0, 0, self.SQUARE_SIZE, self.SQUARE_SIZE)
                 rect.center = (cur_pos_x, self.convert_y(cur_pos_y))
                 if self.mode == "black":
+                    # Поля чёрных отображаются зеркально главной диагонали, чтобы стартовая позиция была снизу.
                     x, y = rect.center
                     x = self.screen_width // 2 + (self.screen_width // 2 - x)
                     y = self.screen_height // 2 + (self.screen_height // 2 - y)
@@ -86,6 +95,7 @@ class Board:
             cur_pos_y += self.SQUARE_SIZE
 
     def convert_y(self, y):
+        # y отсчитывается снизу вверх.
         return self.screen_height - y
 
     def reset_flags(self):
@@ -95,6 +105,7 @@ class Board:
 
     def click(self, mouse_x, mouse_y):
         mouse_y = self.convert_y(mouse_y)
+        # Обрабатывается попадание клика по доске.
         if self.mode == "black":
             mouse_x = self.screen_width // 2 + (self.screen_width // 2 - mouse_x)
             mouse_y = self.screen_height // 2 + (self.screen_height // 2 - mouse_y)
@@ -106,6 +117,7 @@ class Board:
         y = mouse_y // self.SQUARE_SIZE + 1
         if x > 8 or y > 8:
             return
+        # Клик совершен по полю с возможностью хода - сделать ход.
         if self.board[y][x][2] in [2, 3]:
             for y_step in range(1, 9):
                 for x_step in range(1, 9):
@@ -117,14 +129,17 @@ class Board:
                         self.position.check_end("engine")
                         break
             self.reset_flags()
+        # Клик совершен по полю с выделенной фигурой - снять все выделения.
         elif self.board[y][x][2] == 1:
             self.reset_flags()
+        # Клик совершен по полю с фигурой без выделения - выделить данное поле и все поля с возможностью хода.
         elif self.position.find_piece([y, x], "human") is not None:
             self.reset_flags()
             self.board[y][x][2] = 1
             for square in self.position.available_squares(
                 self.position.find_piece([y, x], "human"), "human"
             ):
+                # Выполняется проверка получения шаха после хода.
                 flag = False
                 self.position.move(
                     convert(x, y) + convert(square[1], square[0]), "human"
@@ -147,15 +162,18 @@ class Board:
                     self.board[y_step][x_step][1],
                     0,
                 )
+                # Флаг выделения равен 1 - закрасить поле зелёным.
                 if self.board[y_step][x_step][2] == 1:
                     pygame.draw.rect(
                         surface, self.GREEN, self.board[y_step][x_step][1], 0
                     )
+                # Флаг выделения равен 2 - нарисовать зелёный круг.
                 elif self.board[y_step][x_step][2] == 2:
                     x, y = self.board[y_step][x_step][1].center
                     radius = self.SQUARE_SIZE // 8
                     pygame.gfxdraw.aacircle(surface, x, y, radius, self.GREEN)
                     pygame.gfxdraw.filled_circle(surface, x, y, radius, self.GREEN)
+                # Флаг выделения равен 3 - нарисовать по углам поля зелёные прямоугольники.
                 elif self.board[y_step][x_step][2] == 3:
                     x = self.board[y_step][x_step][1].x
                     y = self.board[y_step][x_step][1].y
@@ -184,6 +202,7 @@ class Board:
                     pygame.draw.rect(surface, self.GREEN, rect_left_down, 0)
                     pygame.draw.rect(surface, self.GREEN, rect_right_up, 0)
                     pygame.draw.rect(surface, self.GREEN, rect_right_down, 0)
+                # Слева от доски отображается (1, 2, 3, 4, 5, 6, 7, 8), снизу от доски отображается (a, b, c, d, e, f, g, h).
                 if self.mode == "white":
                     if x_step == 1:
                         char_x, char_y = self.board[y_step][x_step][1].center
